@@ -28,6 +28,7 @@ html {
 	color: var(--text);
 	background: var(--bg);
 	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
 }
 
 body {

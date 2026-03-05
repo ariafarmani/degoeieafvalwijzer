@@ -128,10 +128,8 @@
 	}
 
 	function exportApple() {
-		// webcal:// triggers native Calendar app on iOS/macOS
-		const url = getExportUrl();
-		const webcalUrl = url.replace(/^\//, `${window.location.origin}/`).replace(/^https?:/, 'webcal:');
-		window.location.href = webcalUrl;
+		// Direct .ics download - iOS/macOS will prompt "Add events to Calendar"
+		window.location.href = getExportUrl();
 		showExportModal = false;
 	}
 
@@ -1010,7 +1008,7 @@
 		to { opacity: 1; transform: translateY(0) scale(1); }
 	}
 
-	/* Responsive */
+	/* Responsive - Tablet */
 	@media (max-width: 720px) {
 		.content-layout {
 			flex-direction: column;
@@ -1021,13 +1019,124 @@
 		}
 	}
 
+	/* Responsive - Mobile */
 	@media (max-width: 480px) {
-		h1 {
-			font-size: 2rem;
+		main {
+			padding: 0 12px 48px;
 		}
 
+		header {
+			padding: 24px 0 18px;
+		}
+
+		h1 {
+			font-size: 1.8rem;
+		}
+
+		.subtitle {
+			font-size: 0.75rem;
+		}
+
+		.header-accent {
+			width: 60px;
+			height: 60px;
+			top: 10px;
+			right: 0px;
+		}
+
+		/* Form: grid on mobile - inputs on row 1, button full width row 2 */
+		.form-row {
+			display: grid;
+			grid-template-columns: 5fr 3fr 2fr;
+			gap: 6px;
+		}
+
+		.btn-search {
+			grid-column: 1 / -1;
+			min-width: unset;
+			height: 44px;
+		}
+
+		input {
+			height: 44px;
+			padding: 0 10px;
+			font-size: 0.95rem;
+			min-width: 0;
+			width: 100%;
+		}
+
+		.field {
+			min-width: 0;
+		}
+
+		label {
+			font-size: 0.68rem;
+		}
+
+		/* Filters */
+		.filters-row {
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.filters-section h2 {
+			font-size: 0.72rem;
+			margin-bottom: 8px;
+		}
+
+		.filter-pills {
+			gap: 5px;
+		}
+
+		.filter-pill {
+			padding: 6px 10px;
+			font-size: 0.75rem;
+			gap: 5px;
+		}
+
+		.pill-dot {
+			width: 8px;
+			height: 8px;
+		}
+
+		.btn-export {
+			margin-top: 0;
+			width: 100%;
+			justify-content: center;
+			padding: 10px 16px;
+		}
+
+		/* Calendar */
 		.calendar-section {
-			padding: 14px;
+			padding: 12px;
+			border-radius: 8px;
+		}
+
+		.calendar-nav {
+			margin-bottom: 12px;
+		}
+
+		.calendar-nav h3 {
+			font-size: 1.05rem;
+		}
+
+		.nav-btn {
+			width: 34px;
+			height: 34px;
+		}
+
+		.day-header {
+			font-size: 0.65rem;
+			padding-bottom: 6px;
+		}
+
+		.day-cell {
+			gap: 2px;
+			border-radius: 4px;
+		}
+
+		.day-number {
+			font-size: 0.75rem;
 		}
 
 		.dot {
@@ -1035,22 +1144,77 @@
 			height: 5px;
 		}
 
-		.btn-search {
-			padding: 0 16px;
-			min-width: 64px;
+		.day-dots {
+			gap: 1.5px;
 		}
 
-		.filters-row {
-			flex-direction: column;
-			gap: 12px;
+		/* Upcoming */
+		.upcoming-section h2 {
+			font-size: 0.72rem;
+			margin-bottom: 8px;
 		}
 
-		.btn-export {
-			margin-top: 0;
+		.upcoming-list {
+			gap: 3px;
+		}
+
+		.upcoming-item {
+			padding: 9px 12px;
+			gap: 8px;
+		}
+
+		.upcoming-type {
+			font-size: 0.78rem;
+		}
+
+		.upcoming-date {
+			font-size: 0.72rem;
+		}
+
+		/* Empty state */
+		.empty-state {
+			padding: 40px 16px;
+		}
+
+		.empty-state p {
+			font-size: 0.85rem;
+		}
+
+		/* Modal */
+		.modal-backdrop {
+			padding: 12px;
+			align-items: flex-end;
 		}
 
 		.modal {
 			padding: 20px;
+			border-radius: 14px 14px 0 0;
+			max-width: 100%;
+			animation: slideUpMobile 0.25s ease;
 		}
+
+		.modal-header h3 {
+			font-size: 1.05rem;
+		}
+
+		.export-option {
+			padding: 12px 14px;
+			gap: 12px;
+		}
+
+		.export-icon {
+			width: 40px;
+			height: 40px;
+			border-radius: 8px;
+		}
+
+		.export-name {
+			font-size: 0.85rem;
+		}
+	}
+
+	@keyframes slideUpMobile {
+		from { opacity: 0; transform: translateY(100%); }
+		to { opacity: 1; transform: translateY(0); }
 	}
 </style>

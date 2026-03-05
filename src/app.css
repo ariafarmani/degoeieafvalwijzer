@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Archivo:wght@400;500;600&display=swap');
+
+:root {
+	--bg: #f7f3ee;
+	--bg-card: #ffffff;
+	--text: #1a1a1a;
+	--text-muted: #78716c;
+	--border: #e7e5e4;
+	--border-strong: #d6d3d1;
+	--accent: #ea580c;
+	--accent-hover: #c2410c;
+	--radius: 10px;
+	--radius-sm: 6px;
+	--font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+	--font-body: 'Archivo', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-family: var(--font-body);
+	color: var(--text);
+	background: var(--bg);
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	min-height: 100dvh;
+	background:
+		radial-gradient(ellipse at 20% 0%, rgba(234, 88, 12, 0.04) 0%, transparent 60%),
+		radial-gradient(ellipse at 80% 100%, rgba(22, 163, 74, 0.03) 0%, transparent 60%),
+		var(--bg);
+}

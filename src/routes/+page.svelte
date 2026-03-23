@@ -279,7 +279,11 @@
 								style="--pill-color: {config.color}; --pill-bg: {config.bg}"
 								onclick={() => toggleFilter(type)}
 							>
-								<span class="pill-dot"></span>
+								<span class="pill-icon" style="background: {config.color}">
+									<svg viewBox="0 0 24 24" fill="none">
+										<path d={config.icon} stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</span>
 								{config.label}
 							</button>
 						{/each}
@@ -327,15 +331,19 @@
 							>
 								<span class="day-number">{day}</span>
 								{#if entries.length > 0}
-									<div class="day-dots">
+									<div class="day-icons">
 										{#each entries as entry}
 											{@const config = WASTE_TYPES[entry.type]}
 											{#if config}
 												<span
-													class="dot"
+													class="waste-icon"
 													style="background: {config.color}"
 													title={config.label}
-												></span>
+												>
+													<svg viewBox="0 0 24 24" fill="none">
+														<path d={config.icon} stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+													</svg>
+												</span>
 											{/if}
 										{/each}
 									</div>
@@ -354,7 +362,11 @@
 							{@const config = WASTE_TYPES[entry.type]}
 							{#if config}
 								<li class="upcoming-item">
-									<span class="upcoming-dot" style="background: {config.color}"></span>
+									<span class="upcoming-icon" style="background: {config.color}">
+										<svg viewBox="0 0 24 24" fill="none">
+											<path d={config.icon} stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+									</span>
 									<div class="upcoming-info">
 										<span class="upcoming-type">{config.label}</span>
 										<span class="upcoming-date">{formatDisplayDate(entry.date)}</span>
@@ -648,16 +660,23 @@
 		color: var(--pill-color);
 	}
 
-	.pill-dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: var(--pill-color);
+	.pill-icon {
+		width: 18px;
+		height: 18px;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		opacity: 0.4;
 		transition: opacity 0.15s;
 	}
 
-	.filter-pill.active .pill-dot { opacity: 1; }
+	.pill-icon svg {
+		width: 12px;
+		height: 12px;
+	}
+
+	.filter-pill.active .pill-icon { opacity: 1; }
 
 	/* Export button */
 	.btn-export {
@@ -754,10 +773,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 3px;
+		gap: 2px;
 		border-radius: var(--radius-sm);
 		position: relative;
 		transition: background 0.1s;
+		padding: 2px;
 	}
 
 	.day-cell.empty { pointer-events: none; }
@@ -775,19 +795,27 @@
 		line-height: 1;
 	}
 
-	.day-dots {
+	.day-icons {
 		display: flex;
 		gap: 2px;
 		flex-wrap: wrap;
 		justify-content: center;
-		max-width: 90%;
+		max-width: 100%;
 	}
 
-	.dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
+	.waste-icon {
+		width: 22px;
+		height: 22px;
+		border-radius: 4px;
 		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.waste-icon svg {
+		width: 14px;
+		height: 14px;
 	}
 
 	/* Upcoming sidebar */
@@ -823,11 +851,19 @@
 		border: 1px solid var(--border);
 	}
 
-	.upcoming-dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
+	.upcoming-icon {
+		width: 28px;
+		height: 28px;
+		border-radius: 6px;
 		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.upcoming-icon svg {
+		width: 18px;
+		height: 18px;
 	}
 
 	.upcoming-info {
@@ -1094,9 +1130,14 @@
 			gap: 5px;
 		}
 
-		.pill-dot {
-			width: 8px;
-			height: 8px;
+		.pill-icon {
+			width: 16px;
+			height: 16px;
+		}
+
+		.pill-icon svg {
+			width: 10px;
+			height: 10px;
 		}
 
 		.btn-export {
@@ -1139,12 +1180,18 @@
 			font-size: 0.75rem;
 		}
 
-		.dot {
-			width: 5px;
-			height: 5px;
+		.waste-icon {
+			width: 18px;
+			height: 18px;
+			border-radius: 3px;
 		}
 
-		.day-dots {
+		.waste-icon svg {
+			width: 11px;
+			height: 11px;
+		}
+
+		.day-icons {
 			gap: 1.5px;
 		}
 

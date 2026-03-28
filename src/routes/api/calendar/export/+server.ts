@@ -1,4 +1,6 @@
 import { FIREBASE_API_KEY, PROVIDER_ID } from '$env/static/private';
+import { validatePostcode, validateHousenumber, validateSuffix } from '$lib/server/validation';
+import { isRateLimited } from '$lib/server/rate-limit';
 import type { RequestHandler } from './$types';
 
 const BASE_URL =
@@ -50,24 +52,43 @@ function nextDay(dateStr: string): string {
 	return `${y}-${m}-${day}`;
 }
 
-export const GET: RequestHandler = async ({ url }) => {
-	const postcode = url.searchParams.get('postcode');
-	const housenumber = url.searchParams.get('housenumber');
+export const GET: RequestHandler = async ({ url, getClientAddress }) => {
+	const clientIp = getClientAddress();
+	if (isRateLimited(clientIp)) {
+		return new Response('Te veel verzoeken, probeer het later opnieuw', { status: 429 });
+	}
+
+	const postcodeParam = url.searchParams.get('postcode');
+	const housenumberParam = url.searchParams.get('housenumber');
 	const suffixParam = url.searchParams.get('suffix') || '';
 	const typesParam = url.searchParams.get('types') || '';
 
-	if (!postcode || !housenumber) {
-		return new Response('Missing parameters', { status: 400 });
+	if (!postcodeParam || !housenumberParam) {
+		return new Response('Postcode en huisnummer zijn verplicht', { status: 400 });
+	}
+
+	const zipcode = validatePostcode(postcodeParam);
+	if (!zipcode) {
+		return new Response('Ongeldige postcode (verwacht formaat: 1234AB)', { status: 400 });
+	}
+
+	const housenumber = validateHousenumber(housenumberParam);
+	if (!housenumber) {
+		return new Response('Ongeldig huisnummer', { status: 400 });
+	}
+
+	const validSuffix = suffixParam ? validateSuffix(suffixParam) : null;
+	if (suffixParam && validSuffix === null) {
+		return new Response('Ongeldige toevoeging', { status: 400 });
 	}
 
 	const allowedTypes = typesParam ? new Set(typesParam.split(',')) : null;
 
 	try {
 		const token = await getToken();
-		const zipcode = postcode.toUpperCase().replace(/\s/g, '');
 
 		const params = new URLSearchParams({ zipcode, housenumber });
-		if (suffixParam) params.set('suffix', suffixParam.toUpperCase());
+		if (validSuffix) params.set('suffix', validSuffix);
 
 		const addressRes = await fetch(
 			`${BASE_URL}/organisations/${PROVIDER_ID}/address?${params}`,
@@ -155,7 +176,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 		});
 	} catch (e) {
-		console.error('Export error:', e);
+		console.error('Export error:', e instanceof Error ? e.message : 'Unknown error');
 		if (cachedToken) cachedToken = null;
 		return new Response('Er ging iets mis', { status: 500 });
 	}

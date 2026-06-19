@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { FIREBASE_API_KEY, PROVIDER_ID } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
 const BASE_URL =
@@ -13,7 +13,7 @@ async function getToken(): Promise<string> {
 	}
 
 	const res = await fetch(
-		`https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${FIREBASE_API_KEY}`,
+		`https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${env.FIREBASE_API_KEY}`,
 		{
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -67,7 +67,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		if (suffix) params.set('suffix', suffix.toUpperCase());
 
 		const addressRes = await fetch(
-			`${BASE_URL}/organisations/${PROVIDER_ID}/address?${params}`,
+			`${BASE_URL}/organisations/${env.PROVIDER_ID}/address?${params}`,
 			{ headers: { authorization: token } }
 		);
 
@@ -90,7 +90,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		const calendarRes = await fetch(
-			`${BASE_URL}/organisations/${PROVIDER_ID}/address/${address.addressId}/calendar`,
+			`${BASE_URL}/organisations/${env.PROVIDER_ID}/address/${address.addressId}/calendar`,
 			{ headers: { authorization: token } }
 		);
 

@@ -199,14 +199,14 @@
 </script>
 
 <svelte:head>
-	<title>De Goeie Afvalwijzer - Groningen</title>
+	<title>De Goude Ofvalwiezer - Groningen</title>
 	<meta name="description" content="Afvalkalender voor gemeente Groningen" />
 </svelte:head>
 
 <main>
 	<header>
 		<div class="header-inner">
-			<h1>De Goeie<br /><span>Afvalwijzer</span></h1>
+			<h1>De Goude<br /><span>Ofvalwiezer</span></h1>
 			<p class="subtitle">Gemeente Groningen</p>
 		</div>
 		<div class="header-accent"></div>

@@ -11,6 +11,16 @@
 	let hasSearched = $state(false);
 	let activeFilters = $state<Set<string>>(new Set(DEFAULT_FILTERS));
 	let showExportModal = $state(false);
+	let exportDialog = $state<HTMLDialogElement>();
+
+	$effect(() => {
+		if (!exportDialog) return;
+		if (showExportModal && !exportDialog.open) {
+			exportDialog.showModal();
+		} else if (!showExportModal && exportDialog.open) {
+			exportDialog.close();
+		}
+	});
 
 	const today = new Date();
 	let viewMonth = $state(today.getMonth());
@@ -396,11 +406,18 @@
 </main>
 
 <!-- Export Modal -->
-{#if showExportModal}
-	<div class="modal-backdrop" onclick={() => (showExportModal = false)} role="presentation">
-		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" aria-label="Exporteer kalender">
-			<div class="modal-header">
-				<h3>Exporteer naar je kalender</h3>
+<dialog
+	class="modal-dialog"
+	bind:this={exportDialog}
+	onclose={() => (showExportModal = false)}
+	onclick={(e) => {
+		if (e.target === exportDialog) showExportModal = false;
+	}}
+	aria-labelledby="export-title"
+>
+	<div class="modal">
+		<div class="modal-header">
+			<h3 id="export-title">Exporteer naar je kalender</h3>
 				<button class="modal-close" onclick={() => (showExportModal = false)} aria-label="Sluiten">
 					<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
 						<path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -465,8 +482,7 @@
 				</button>
 			</div>
 		</div>
-	</div>
-{/if}
+</dialog>
 
 <style>
 	main {
@@ -901,16 +917,21 @@
 	}
 
 	/* Modal */
-	.modal-backdrop {
+	.modal-dialog {
 		position: fixed;
 		inset: 0;
+		margin: auto;
+		border: none;
+		padding: 20px;
+		background: transparent;
+		max-width: 100vw;
+		max-height: 100dvh;
+		overflow: visible;
+	}
+
+	.modal-dialog::backdrop {
 		background: rgba(0, 0, 0, 0.4);
 		backdrop-filter: blur(4px);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 100;
-		padding: 20px;
 		animation: fadeIn 0.15s ease;
 	}
 
@@ -1228,9 +1249,11 @@
 		}
 
 		/* Modal */
-		.modal-backdrop {
-			padding: 12px;
-			align-items: flex-end;
+		.modal-dialog {
+			padding: 0;
+			margin-top: auto;
+			margin-bottom: 0;
+			width: 100%;
 		}
 
 		.modal {

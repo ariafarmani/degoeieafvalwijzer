@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { WASTE_TYPES, DEFAULT_FILTERS, DUTCH_MONTHS, DUTCH_DAYS } from '$lib/types';
 	import type { WasteEntry } from '$lib/types';
+	import { SITE, FAQ, buildJsonLd } from '$lib/seo';
+
+	const jsonLd = buildJsonLd();
 
 	let postcode = $state('');
 	let housenumber = $state('');
@@ -209,8 +212,29 @@
 </script>
 
 <svelte:head>
-	<title>De Goude Ofvalwiezer - Groningen</title>
-	<meta name="description" content="Afvalkalender voor gemeente Groningen" />
+	<title>{SITE.title}</title>
+	<meta name="description" content={SITE.description} />
+	<link rel="canonical" href={SITE.url} />
+
+	<!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content={SITE.name} />
+	<meta property="og:title" content={SITE.title} />
+	<meta property="og:description" content={SITE.description} />
+	<meta property="og:url" content={SITE.url} />
+	<meta property="og:locale" content={SITE.locale} />
+	<meta property="og:image" content={SITE.ogImage} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+
+	<!-- Twitter / X -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={SITE.title} />
+	<meta name="twitter:description" content={SITE.description} />
+	<meta name="twitter:image" content={SITE.ogImage} />
+
+	<!-- Structured data -->
+	{@html `<script type="application/ld+json">${jsonLd}</script>`}
 </svelte:head>
 
 <main>
@@ -401,8 +425,23 @@
 				</svg>
 			</div>
 			<p>Vul je postcode en huisnummer in<br />om je afvalkalender te bekijken</p>
+			<p class="empty-intro">
+				De Goude Ofvalwiezer toont je in één oogopslag wanneer GFT, papier, PMD,
+				restafval en grofafval worden opgehaald in gemeente Groningen. Bekijk de
+				ophaaldagen per maand en exporteer ze gratis naar je agenda.
+			</p>
 		</section>
 	{/if}
+
+	<section class="faq-section" aria-labelledby="faq-heading">
+		<h2 id="faq-heading">Veelgestelde vragen over afval ophalen in Groningen</h2>
+		{#each FAQ as item}
+			<details class="faq-item">
+				<summary>{item.q}</summary>
+				<p>{item.a}</p>
+			</details>
+		{/each}
+	</section>
 </main>
 
 <!-- Export Modal -->
@@ -914,6 +953,68 @@
 	.empty-state p {
 		font-size: 0.95rem;
 		line-height: 1.6;
+	}
+
+	.empty-intro {
+		max-width: 520px;
+		margin: 18px auto 0;
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		opacity: 0.85;
+	}
+
+	/* FAQ */
+	.faq-section {
+		margin-top: 56px;
+		padding-top: 32px;
+		border-top: 1px solid var(--border);
+	}
+
+	.faq-section h2 {
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 700;
+		margin-bottom: 16px;
+		color: var(--text);
+	}
+
+	.faq-item {
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		background: var(--bg-card);
+		margin-bottom: 8px;
+		overflow: hidden;
+	}
+
+	.faq-item summary {
+		cursor: pointer;
+		padding: 14px 16px;
+		font-weight: 600;
+		font-size: 0.9rem;
+		color: var(--text);
+		list-style: none;
+	}
+
+	.faq-item summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq-item summary::after {
+		content: '+';
+		float: right;
+		font-weight: 400;
+		color: var(--text-muted);
+	}
+
+	.faq-item[open] summary::after {
+		content: '−';
+	}
+
+	.faq-item p {
+		padding: 0 16px 14px;
+		font-size: 0.85rem;
+		line-height: 1.6;
+		color: var(--text-muted);
 	}
 
 	/* Modal */

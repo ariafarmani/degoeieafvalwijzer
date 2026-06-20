@@ -15,7 +15,7 @@ Een betere afvalkalender voor gemeente Groningen. Vul je postcode en huisnummer 
 
 - [SvelteKit](https://svelte.dev) met TypeScript
 - Burgerportaal API (gemeente Groningen)
-- Vercel voor hosting
+- Cloudflare Workers voor hosting
 
 ## Lokaal draaien
 
@@ -28,13 +28,13 @@ De app draait op `http://localhost:5173`.
 
 ## Deployen
 
-De app is geconfigureerd voor Vercel:
+De app is geconfigureerd voor Cloudflare Workers (zie `wrangler.jsonc` en de `adapter-cloudflare` in `svelte.config.js`):
 
 ```sh
 npm run build
 ```
 
-Koppel de repo aan Vercel en elke push naar `master` wordt automatisch gedeployd.
+De repo is gekoppeld aan Cloudflare Workers Builds; elke push naar `master` wordt automatisch gedeployd.
 
 ## Ondersteunde afvaltypes
 

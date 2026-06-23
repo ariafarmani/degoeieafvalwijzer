@@ -2,6 +2,7 @@
 	import { WASTE_TYPES, DEFAULT_FILTERS, DUTCH_MONTHS, DUTCH_DAYS } from '$lib/types';
 	import type { WasteEntry } from '$lib/types';
 	import { SITE, FAQ, buildJsonLd } from '$lib/seo';
+	import { WASTE_PAGES } from '$lib/content';
 
 	const jsonLd = buildJsonLd();
 
@@ -442,6 +443,16 @@
 			</details>
 		{/each}
 	</section>
+
+	<nav class="info-links" aria-labelledby="info-heading">
+		<h2 id="info-heading">Meer over afval in Groningen</h2>
+		<ul>
+			<li><a href="/afvalkalender-groningen">Afvalkalender &amp; afvalwijzer Groningen</a></li>
+			{#each WASTE_PAGES as p}
+				<li><a href="/afval/{p.slug}">{p.label} ophalen in Groningen</a></li>
+			{/each}
+		</ul>
+	</nav>
 </main>
 
 <!-- Export Modal -->
@@ -1015,6 +1026,41 @@
 		font-size: 0.85rem;
 		line-height: 1.6;
 		color: var(--text-muted);
+	}
+
+	/* Internal links */
+	.info-links {
+		margin-top: 40px;
+		padding-top: 28px;
+		border-top: 1px solid var(--border);
+	}
+
+	.info-links h2 {
+		font-family: var(--font-display);
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--text-muted);
+		margin-bottom: 12px;
+	}
+
+	.info-links ul {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+	}
+
+	.info-links a {
+		color: var(--accent);
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.info-links a:hover {
+		text-decoration: underline;
 	}
 
 	/* Modal */

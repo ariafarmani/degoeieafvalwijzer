@@ -6,7 +6,7 @@ export const SITE = {
 	title: 'Afvalkalender Groningen – ophaaldagen GFT, papier & restafval',
 	// Google snippet. ~155 chars, leads with the user intent + the action.
 	description:
-		'Bekijk direct wanneer GFT, papier, PMD en restafval worden opgehaald in gemeente Groningen. Vul je postcode en huisnummer in en exporteer naar je agenda.',
+		'De afvalwijzer voor gemeente Groningen: bekijk direct wanneer GFT, papier, PMD en restafval worden opgehaald. Vul je postcode in en exporteer naar je agenda.',
 	locale: 'nl_NL',
 	// 1200×630 social-share image.
 	ogImage: 'https://goudeofvalwiezer.nl/og-image.png'
@@ -23,6 +23,10 @@ export const FAQ: { q: string; a: string }[] = [
 	{
 		q: 'Welke afvalsoorten worden in gemeente Groningen opgehaald?',
 		a: 'In Groningen worden onder andere GFT (groente-, fruit- en tuinafval), oud papier, PMD (plastic, metaal en drankkartons), restafval, grofafval, textiel en KCA opgehaald. Welke soorten bij jouw adres horen zie je na het invullen van je postcode.'
+	},
+	{
+		q: 'Is dit dezelfde informatie als de afvalwijzer van de gemeente?',
+		a: 'Ja. De Goude Ofvalwiezer gebruikt de officiële ophaalgegevens van gemeente Groningen, dezelfde bron als de afvalwijzer en afvalkalender van de gemeente. We tonen ze alleen overzichtelijker en met handige agenda-export.'
 	},
 	{
 		q: 'Kan ik de afvalkalender in mijn agenda zetten?',
@@ -80,4 +84,18 @@ export function buildJsonLd(): string {
 	];
 
 	return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+}
+
+// BreadcrumbList structured data for content/landing pages.
+export function buildBreadcrumbLd(items: { name: string; path: string }[]): string {
+	return JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: items.map((item, i) => ({
+			'@type': 'ListItem',
+			position: i + 1,
+			name: item.name,
+			item: `${SITE.url}${item.path}`
+		}))
+	});
 }

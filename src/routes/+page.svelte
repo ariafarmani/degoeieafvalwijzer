@@ -129,10 +129,11 @@
 		return `${dayNames[d.getDay()]} ${d.getDate()} ${DUTCH_MONTHS[d.getMonth()]}`;
 	}
 
-	function getExportUrl(): string {
+	function getExportUrl(source: string): string {
 		const params = new URLSearchParams({
 			postcode: postcode.trim(),
-			housenumber: housenumber.trim()
+			housenumber: housenumber.trim(),
+			source
 		});
 		if (suffix.trim()) params.set('suffix', suffix.trim());
 		const types = [...activeFilters].join(',');
@@ -142,24 +143,23 @@
 
 	function exportApple() {
 		// Direct .ics download - iOS/macOS will prompt "Add events to Calendar"
-		window.location.href = getExportUrl();
+		window.location.href = getExportUrl('apple');
 		showExportModal = false;
 	}
 
 	function exportDownload() {
-		window.open(getExportUrl(), '_blank');
+		window.open(getExportUrl('other'), '_blank');
 		showExportModal = false;
 	}
 
 	function exportGoogle() {
 		// Google Calendar can import .ics via URL
-		const fullUrl = `${window.location.origin}${getExportUrl()}`;
-		window.open(getExportUrl(), '_blank');
+		window.open(getExportUrl('google'), '_blank');
 		showExportModal = false;
 	}
 
 	function exportOutlook() {
-		window.open(getExportUrl(), '_blank');
+		window.open(getExportUrl('outlook'), '_blank');
 		showExportModal = false;
 	}
 

@@ -50,14 +50,27 @@ function nextDay(dateStr: string): string {
 	return `${y}-${m}-${day}`;
 }
 
-export const GET: RequestHandler = async ({ url }) => {
+const DOWNLOAD_SOURCES = new Set(['apple', 'google', 'outlook', 'other']);
+
+export const GET: RequestHandler = async ({ url, platform }) => {
 	const postcode = url.searchParams.get('postcode');
 	const housenumber = url.searchParams.get('housenumber');
 	const suffixParam = url.searchParams.get('suffix') || '';
 	const typesParam = url.searchParams.get('types') || '';
+	const sourceParam = url.searchParams.get('source') || '';
+	const source = DOWNLOAD_SOURCES.has(sourceParam) ? sourceParam : 'unknown';
 
 	if (!postcode || !housenumber) {
 		return new Response('Missing parameters', { status: 400 });
+	}
+
+	try {
+		platform?.env?.ANALYTICS?.writeDataPoint({
+			blobs: ['download', source],
+			indexes: ['download']
+		});
+	} catch {
+		// Analytics mag nooit de download laten falen
 	}
 
 	const allowedTypes = typesParam ? new Set(typesParam.split(',')) : null;

@@ -10,5 +10,15 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	// Cloudflare Analytics Engine: telt hoe vaak "Zoek" en de download/export-knoppen
+	// worden gebruikt. Geen aparte dataset-aanmaak nodig, wordt automatisch aangemaakt
+	// bij de eerste writeDataPoint(). Terug te zien via `wrangler analytics-engine sql`
+	// of de GraphQL Analytics API in het Cloudflare dashboard.
+	"analytics_engine_datasets": [
+		{
+			"binding": "ANALYTICS",
+			"dataset": "degoeieafvalwijzer_events"
+		}
+	]
 }

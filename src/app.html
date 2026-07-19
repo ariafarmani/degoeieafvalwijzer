@@ -14,6 +14,19 @@
 			rel="stylesheet"
 		/>
 		%sveltekit.head%
+
+		<!--
+			Cloudflare Web Analytics (paginabezoeken).
+			Aanzetten: Cloudflare dashboard -> Analytics & Logs -> Web Analytics -> Add a site,
+			kies dit domein en vervang TOKEN_PLACEHOLDER hieronder door de gegenereerde token.
+			Klikken op download/gebruik-knoppen worden apart bijgehouden via Analytics Engine
+			(zie wrangler.jsonc, binding "ANALYTICS").
+		-->
+		<script
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon='{"token": "TOKEN_PLACEHOLDER"}'
+		></script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

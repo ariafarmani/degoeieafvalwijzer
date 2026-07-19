@@ -49,7 +49,18 @@ function normalizeEntry(entry: Record<string, unknown>): {
 	};
 }
 
-export const POST: RequestHandler = async ({ request }) => {
+function trackUsage(platform: App.Platform | undefined, success: boolean) {
+	try {
+		platform?.env?.ANALYTICS?.writeDataPoint({
+			blobs: ['gebruik', success ? 'success' : 'error'],
+			indexes: ['gebruik']
+		});
+	} catch {
+		// Analytics mag nooit de zoekopdracht laten falen
+	}
+}
+
+export const POST: RequestHandler = async ({ request, platform }) => {
 	const { postcode, housenumber, suffix } = await request.json();
 
 	if (!postcode || !housenumber) {
@@ -72,11 +83,13 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 
 		if (!addressRes.ok) {
+			trackUsage(platform, false);
 			return json({ error: 'Adres niet gevonden' }, { status: 404 });
 		}
 
 		const addresses = await addressRes.json();
 		if (!Array.isArray(addresses) || !addresses.length) {
+			trackUsage(platform, false);
 			return json({ error: 'Adres niet gevonden' }, { status: 404 });
 		}
 
@@ -107,10 +120,12 @@ export const POST: RequestHandler = async ({ request }) => {
 			.map((e: Record<string, unknown>) => normalizeEntry(e))
 			.filter((e): e is { type: string; date: string } => e !== null);
 
+		trackUsage(platform, true);
 		return json({ calendar, address });
 	} catch (e) {
 		console.error('API error:', e);
 		if (cachedToken) cachedToken = null;
+		trackUsage(platform, false);
 		return json(
 			{ error: 'Er ging iets mis bij het ophalen van de data' },
 			{ status: 500 }
